@@ -15,24 +15,25 @@
         let obj = {
             id: 10,
             name: 'Sergei'
-            }
-            console.log(obj);
-
+        }
+       let action = 'done'; 
         const pr = new Promise(function (resolve, reject) {
-            setTimeout(() => {
-                resolve(`Success!`);
-                }, 1000)
+            if (action === 'done'){
+                resolve(obj);
+            }
+             reject (new Error('we under attack'));
         });
-
-        pr.then(() => {
-            console.log(obj);
-            console.log(`hm something we doing?`);
-            console.log(`ready to work`);
+        
+        pr.then(val => {
+            console.log(val);
+            console.log(`work complete`);
         })
-
+        .catch(err => console.log(err));
+        
         console.log(`Функция принимает 2 параметра resolve и reject
-        resolve - вызывает успешное выполнение обещания
-        reject - отклоняет выполнение обещания`);
+        resolve - вызывает успешное выполнение 'обещания'
+        reject - отклоняет выполнение 'обещания'
+        Вернуть ошибку можно с помощью функции reject, а перехватить с помощью catch`);
 
         console.warn(`Task # ${++taskNumber}`);
         //2) Есть код ! с помощью промисов написать таким образом чтобы выполнилось по порядку от одного до 5!
