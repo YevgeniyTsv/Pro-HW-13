@@ -16,20 +16,20 @@
             id: 10,
             name: 'Sergei'
         }
-       let action = 'done'; 
+        let action = 'done';
         const pr = new Promise(function (resolve, reject) {
-            if (action === 'done'){
+            if (action === 'done') {
                 resolve(obj);
             }
-             reject (new Error('we under attack'));
+            reject(new Error('we under attack'));
         });
-        
+
         pr.then(val => {
-            console.log(val);
-            console.log(`work complete`);
-        })
-        .catch(err => console.log(err));
-        
+                console.log(val);
+                console.log(`work complete`);
+            })
+            .catch(err => console.log(err));
+
         console.log(`Функция принимает 2 параметра resolve и reject
         resolve - вызывает успешное выполнение 'обещания'
         reject - отклоняет выполнение 'обещания'
@@ -38,30 +38,50 @@
         console.warn(`Task # ${++taskNumber}`);
         //2) Есть код ! с помощью промисов написать таким образом чтобы выполнилось по порядку от одного до 5!
         // На данный момент выполнятся setTimeout-ы вконце!!
-        
-        setTimeout(() => console.log('1'), 1300);
-        console.log('2')
-        console.log('3')
-        setTimeout(() => console.log('4'), 300);
-        console.log('5')
+
+        let prom = new Promise(resolve => {
+            setTimeout(() => {
+                console.log('1');
+                resolve();
+            }, 1300);
+        });
+        prom.then(() => {
+                console.log('2');
+                console.log('3');
+            })
+            .then(() => new Promise(resolve => setTimeout(() => {
+                console.log('4');
+                resolve();
+            }, 300)))
+            .then(() => console.log('5'));
+
+
+
+
 
         console.warn(`Task # ${++taskNumber}`);
-       //3) Есть код !  Нужно всего лишь написать комментарий что делает каждая из строчок!
-        
+        //3) Есть код !  Нужно всего лишь написать комментарий что делает каждая из строчок!
+
         const pr2 = new Promise(function (resolve, reject) { //объявляется промис
-            resolve({                     //возвращается успешное выполнение
-                id: 2                     //объект, который возвращается
+            resolve({ //возвращается успешное выполнение
+                id: 2 //объект, который возвращается
             })
         });
-        pr2.then((data) => data)            //вызывается метод промиса .then, который принимает результат выполнения promice в качестве параметра => возвращает data
+        pr2.then((data) =>
+                data
+            ) //вызывается метод промиса .then, который принимает результат выполнения promice в качестве параметра => возвращает data
             .then((res) => {
                 throw new Error('Something went wrong') //генерирует ошибку
             })
-            .catch((e) => console.log('ERROR', e))//catch принимает ошибку в качестве параметра, выводит в консоль сообщение об ошибке
-       
+            .catch((e) => console.log('ERROR',
+                e)) //catch принимает ошибку в качестве параметра, выводит в консоль сообщение об ошибке
+
+
+
 
         console.warn(`Task # ${++taskNumber}`);
-        // 4) Использую Promise.all получить массив из промисов и после чего отсортировать тот что возвращает массив! 
+        // 4) Использую Promise.all получить массив из промисов и 
+        //  после чего отсортировать тот что возвращает массив! 
 
 
         const prom1 = new Promise(function (resolve, reject) {
@@ -75,6 +95,11 @@
         const prom3 = new Promise(function (resolve, reject) {
             resolve([6, 2, 4, 6]);
         })
+        Promise.all([prom1, prom2, prom3])
+            .then(result => result.find(el => Array.isArray(el)).sort((a, b) => a - b))
+            .then(console.log)
+            .catch(err => console.log(err));
+
 
         console.warn(`Task # ${++taskNumber}`);
         // 5) Есть роуты!!
@@ -86,13 +111,13 @@
         // ВОТ ПРИМЕР ЗАПРОСА по первому URL! Конечно это нужно будет обернуть в промис!
 
 
-        var Req = new XMLHttpRequest();
-        Req.onload = function () {
-            if (!this.responseText) rej('BYE');
-            res(JSON.parse(this.responseText));
-        }
-        Req.open("GET", 'https://playwithpromise.herokuapp.com/api/order-review/last');
-        Req.send();
+        // var Req = new XMLHttpRequest();
+        // Req.onload = function () {
+        //     if (!this.responseText) rej('BYE');
+        //     res(JSON.parse(this.responseText));
+        // }
+        // Req.open("GET", 'https://playwithpromise.herokuapp.com/api/order-review/last');
+        // Req.send();
     </script>
 </body>
 
