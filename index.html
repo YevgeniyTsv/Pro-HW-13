@@ -30,7 +30,7 @@
             })
             .catch(err => console.log(err));
 
-        console.log(`Функция принимает 2 параметра resolve и reject
+        console.log(`Функция  принимает 2 параметра resolve и reject
         resolve - вызывает успешное выполнение 'обещания'
         reject - отклоняет выполнение 'обещания'
         Вернуть ошибку можно с помощью функции reject, а перехватить с помощью catch`);
@@ -118,6 +118,28 @@
         // }
         // Req.open("GET", 'https://playwithpromise.herokuapp.com/api/order-review/last');
         // Req.send();
+
+        function request(url) {
+            return new Promise((resolve, reject) => {
+                var req = XMLHttpRequest();
+                Req.onload = function () {
+                    if (!this.redponseText) rej('BYE');
+                    resolve(JSON.parse(this.responseText));
+                }
+                Req.open('Get', url);
+                Req.send();
+            })
+        }
+        request('https://playwithpromise.herokuapp.com/api/order-review/last')
+        .then(response => request(`https://playwithpromise.herokuapp.com/api/order-review/getid/${response._id}`))
+            .then(response => {
+                const urls = response.orderList.map(c =>
+                        `https://playwithpromise.herokuapp.com/api/order-system/product/${c.productId}`), 
+                    productReq = urls.map(url => request(url));
+                return Promise.all(productReq);
+            })
+            .then(response => response.forEach(resp => console.log(resp)))
+            .catch(e => console.log(e));
     </script>
 </body>
 
